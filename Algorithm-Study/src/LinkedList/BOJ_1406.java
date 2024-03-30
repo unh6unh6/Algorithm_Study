@@ -3,18 +3,19 @@ package LinkedList;
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class BOJ_1406 {
 
-    /** 시간초과 ㅋㅋㅋ **/
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        char arr[] = br.readLine().toCharArray();
+        StringBuilder sb = new StringBuilder();
+        String str = br.readLine();
         List<Character> list = new LinkedList<>();
-        for(char c : arr)
-            list.add(c);
+        for (int i = 0; i < str.length(); i++)
+            list.add(str.charAt(i));
+
         int m = Integer.parseInt(br.readLine());
-        int cur = arr.length;
+        int cur = list.size();
         for (int i = 0; i < m; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             String token1 = st.nextToken();
@@ -24,13 +25,12 @@ public class Main {
                 cur++;
             else if(token1.equals("B") && cur != 0)
                 list.remove(--cur);
-            else if(token1.equals("P")) {
-                char add = st.nextToken().charAt(0);
-                list.add(cur++, add);
-            }
+            else if(token1.equals("P"))
+                list.add(cur++, st.nextToken().charAt(0));
         }
         for (int i = 0; i < list.size(); i++)
-            bw.write(String.valueOf(list.get(i)));
+            sb.append(list.get(i));
+        bw.write(sb.toString());
         bw.flush();
         bw.close();
     }
