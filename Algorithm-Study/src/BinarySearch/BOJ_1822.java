@@ -28,9 +28,8 @@ public class BOJ_1822 {
 
         System.out.println(arr.length - cnt);
         for (int i = 0; i < a; i++) {
-            if(flag[i])
-                continue;
-            System.out.print(arr[i] + " ");
+            if(!flag[i])
+                System.out.print(arr[i] + " ");
         }
     }
     static void search(int element, int low, int high) {

@@ -30,10 +30,8 @@ public class BOJ_1654 {
         long cnt = 0;
         length = (low + high) / 2;
 
-
         for (int i = 0; i < k; i++)
             cnt += (arr[i] / length);
-
 
         if(cnt < n)
             return find(low, length - 1, k, n, max);
