@@ -1,7 +1,10 @@
 package Practice;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Soccer {
-    Filed filed;
+    JField field;
     Ball ball;
     Player p, q, r;
     Team team1, team2;
@@ -15,12 +18,25 @@ public class Soccer {
     }
 
     Soccer() {
-        filed = new Filed(128, 96);
-        ball = new Ball(filed);
+
+
+        field = new JField(640/2, 480/2, this);
+        ball = new Ball(field);
         team1 = new Team("Tottenham");
         team2 = new Team("Liverpool");
-        p = new Player("SON", team1, filed, -50, 10);
-        q = new Player("LEE", team2, filed, 50, 10);
+        p = new Player("SON", team1, field, -50, 10);
+        q = new Player("LEE", team2, field, 50, 10);
+
+        JPanel pan = new JPanel(null); // 배치관리자 없다
+        pan.setBackground(Color.WHITE);
+        pan.add(field);
+        field.setLocation(20, 10);
+        JFrame f = new JFrame("핵심J: Soccer Graphical");
+        f.getContentPane().add(pan);
+        f.setSize(320+56, 240+60);
+        f.setVisible(true);
+        f.setResizable(false);
+        start();
     }
 
     void start() {
@@ -66,7 +82,9 @@ public class Soccer {
                 ball.setX(0);
                 ball.setY(0);
             }
-            show();
+            //show();
+            field.repaint();
+
             try {
                 Thread.sleep(200);
             } catch (Exception e) {}
@@ -95,10 +113,10 @@ public class Soccer {
         int qy = q.getY() / dH;
         int qx = q.getX() / dW;
 
-        hline(filed.getRight()/dW - filed.getLeft()/dW + 1);
-        for(int r = filed.getTop()/dH; r <= filed.getBottom()/dH; r ++) {
+        hline(field.getRight()/dW - field.getLeft()/dW + 1);
+        for(int r = field.getTop()/dH; r <= field.getBottom()/dH; r ++) {
             tpr("|");
-            for(int i = filed.getLeft()/dW; i<= filed.getRight()/dW; i ++) {
+            for(int i = field.getLeft()/dW; i<= field.getRight()/dW; i ++) {
                 if (r == by && i == bx) {
                     tpr("*");
                     if (r == py && i == px) {
@@ -115,7 +133,7 @@ public class Soccer {
             }
             tprl("|"+r);
         }
-        hline(filed.getRight()/dW - filed.getLeft()/dW + 1);
+        hline(field.getRight()/dW - field.getLeft()/dW + 1);
     }
     void hline(int n) {
         tpr("+");
@@ -144,6 +162,8 @@ class Filed {
         x0 = -x1;
         y0 = -y1;
     }
+    int getCx() { return x1; }
+    int getCy() { return y1; }
     int getLeft() {
         return x0;
     }
@@ -162,14 +182,21 @@ class Filed {
 }
 
 class Ball {
-    Filed f;
+    JField f;
     int x, y;
     double vx, vy;
-    Ball(Filed f) {
+    Ball(JField f) {
         x = 0;
         vx = 0;
         y = 0;
         this.f = f;
+    }
+    void draw(Graphics g) {
+        int radius = 5;
+        g.setColor(Color.black);
+        g.fillOval(f.getCx() + x - radius,
+                f.getCy() + y - radius,
+                radius*2, radius*2);
     }
     boolean move() {
         x = x + (int)vx;
@@ -220,17 +247,21 @@ class Ball {
 }
 
 class Player {
-    Filed f;
+    JField f;
     int x, y;
     double dx, dy, speed;
     String name;
     Team team;
-    Player(String name, Team tm, Filed f, int x0, int y0) {
+    Player(String name, Team tm, JField f, int x0, int y0) {
         this.name = name;
         x = x0;
         y = y0;
         team = tm;
         this.f = f;
+    }
+    void runtoward(int dx, int dy) { x += dx; y += dy; }
+    void draw(Graphics g) {
+        g.drawRect(f.getCx()+x-5, f.getCy()+y-20, 10, 20);
     }
     int move(Ball b) {
         dash(b);
